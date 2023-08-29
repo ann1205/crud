@@ -1,0 +1,77 @@
+@use '../../lib/service.scss' as s;
+
+.card-list {
+    display: flex;
+    flex-direction: column;
+    padding: s.space(4);
+    gap: s.space(8);
+
+    &__title {
+        font-size: 28px;
+        color: blue;
+        font-weight: bold;
+        padding-top: s.space(2);
+        padding-left: s.space(2);  
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: row;
+        gap: s.space(4);
+    }
+   
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(10);
+}
+
+.card {
+    &__content {
+        display: flex;
+        flex-direction: column;
+        width: 250px;
+        max-width: 100%;
+        padding: s.space(4);
+}
+
+&__bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+&__button {    
+    padding: s.space(2);  
+    a {
+        text-decoration: none;
+    }  
+}
+}
+.product {
+    &__title {
+        font-size: 20px;
+        font-weight: bold;        
+        margin-bottom: s.space(3);
+    }
+
+    &__text {
+        font-size: 16px; 
+        margin-bottom: s.space(3);       
+    }
+
+    &__id {
+        font-size: 16px;
+        color: rgb(175, 175, 175);
+        margin-bottom: s.space(3);
+    }
+
+    &__price {
+        
+        font-weight: bold;
+    }
+
+}

@@ -1,0 +1,39 @@
+.form {
+  display: flex;
+  flex-direction: row;
+  padding: 16px;
+  gap: 32px;
+  margin: 16px;
+}
+.form__title {
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 20px;
+}
+.form__info {
+  gap: 32px;
+}
+.form__button {
+  background-color: blue;
+  border: 1px solid #ddd;
+  padding: 8px;
+  width: 35%;
+}
+.form__button > a {
+  color: white;
+  text-decoration: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.card {
+  justify-content: space-between;
+  width: 600px;
+  max-width: 100%;
+}
+
+/*# sourceMappingURL=style.css.map */
