@@ -1,0 +1,53 @@
+@use '../../lib/service.scss' as s;
+
+@use '../../component/heading/style.scss' as heading;
+@use '../../component/divider/style.scss' as divider;
+@use '../../component/field-text/style.scss' as field-text;
+@use '../../component/button/style.scss' as button;
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(10);
+    padding: s.space(10);
+}
+
+.card {
+    display: grid;
+    grid-template-columns: 10% 1fr 25% 20%;
+    padding: s.space(5);
+}
+
+.field {
+    gap: s.space(4);
+    padding: s.space(4);
+}
+
+.label-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.label-input__id {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color:rgba(83, 82, 83, 0.801);
+}
+
+.field__label {
+    padding-left: 8px;
+    color:rgba(83, 82, 83, 0.801);
+}
+
+.link {
+    color:rgba(83, 82, 83, 0.801);
+    font-weight: bold;
+    padding-left: 4px;
+}
+
+.field__data {
+    border: none;    
+}
+
+
