@@ -1,6 +1,5 @@
 // Підключаємо технологію express для back-end сервера
 const express = require('express')
-const { info, Value } = require('sass')
 // Cтворюємо роутер - місце, куди ми підключаємо ендпоїнти
 const router = express.Router()
 
@@ -69,42 +68,6 @@ Track.create(
   'https://picsum.photos/100/100',
 )
 
-Track.create(
-  'Paint The Town Red (Lyrics)',
-  'Doja Cat',
-  'https://picsum.photos/100/100',
-)
-
-Track.create(
-  ' Makeba (Official Video)',
-  'Jain',
-  'https://picsum.photos/100/100',
-)
-
-Track.create(
-  'Way Down We Go',
-  'KALEO',
-  'https://picsum.photos/100/100',
-)
-
-Track.create(
-  'Another Love',
-  'Tom Odell',
-  'https://picsum.photos/100/100',
-)
-
-Track.create(
-  'Unstoppable',
-  'Sia',
-  'https://picsum.photos/100/100',
-)
-
-Track.create(
-  'Bad Liar',
-  'Imagine Dragons',
-  'https://picsum.photos/100/100',
-)
-
 console.log(Track.getList())
 
 class Playlist {
@@ -114,6 +77,7 @@ class Playlist {
     this.id = Math.floor(1000 + Math.random() * 9000)
     this.name = name
     this.tracks = []
+    this.image = 'https://picsum.photos/100/100'
   }
 
   static create(name) {
@@ -153,12 +117,45 @@ class Playlist {
   addTrack(playlist, track) {
     playlist.tracks.push(track)
   }
+
+  static findListByValue(name) {
+    return this.#list.filter((playlist) =>
+      playlist.name
+        .toLowerCase()
+        .includes(name.toLowerCase()),
+    )
+  }
 }
+
+Playlist.makeMix(Playlist.create('Test'))
+Playlist.makeMix(Playlist.create('Test2'))
+Playlist.makeMix(Playlist.create('Test3'))
 
 // router.get Створює нам один ентпоїнт
 
-// ↙️ тут вводимо шлях (PATH) до сторінки
 router.get('/', function (req, res) {
+  // res.render генерує нам HTML сторінку
+  const list = Playlist.getList()
+
+  console.log(list)
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  res.render('spotify-index', {
+    // вказуємо назву папки контейнера, в якій знаходяться наші стилі
+    style: 'spotify-index',
+
+    data: {
+      list: list.map(({ tracks, ...rest }) => ({
+        ...rest,
+        amount: tracks.length,
+      })),
+    },
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+// ↙️ тут вводимо шлях (PATH) до сторінки
+router.get('/spotify-choose', function (req, res) {
   // res.render генерує нам HTML сторінку
 
   // ↙️ cюди вводимо назву файлу з сontainer
@@ -287,29 +284,51 @@ router.get('/spotify-track-delete', function (req, res) {
 router.get('/spotify-playlist-add', function (req, res) {
   const playlistId = Number(req.query.playlistId)
   const playlist = Playlist.getById(playlistId)
+  const allTracks = Track.getList()
+
+  console.log(playlistId, playlist, allTracks)
 
   res.render('spotify-playlist-add', {
     style: 'spotify-playlist-add',
 
     data: {
       playlistId: playlist.id,
-      tracks: Track.getById(),
+      tracks: allTracks,
     },
   })
 })
 
-router.get('/spotify-track-add', function (req, res) {
-  const playlistId = Number(req.query.playlistId)
-  const trackId = Number(req.query.trackId)
-
+router.post('/spotify-playlist-add', function (req, res) {
+  const playlistId = Number(req.body.playlistId)
+  const trackId = Number(req.body.trackId)
   const playlist = Playlist.getById(playlistId)
-  const track = Track.getById(trackId)
 
-  playlist.addTrack(playlist, track)
-
+  if (!playlist) {
+    return res.render('alert', {
+      style: 'alert',
+      data: {
+        message: 'Помилка',
+        info: 'Такого плейліста не знайдено',
+        link: `/spotify-playlist?id=${playlistId}`,
+      },
+    })
+  }
+  const trackToAdd = Track.getList().find(
+    (track) => track.id === trackId,
+  )
+  if (!trackToAdd) {
+    return res.render('alert', {
+      style: 'alert',
+      data: {
+        message: 'Помилка',
+        info: 'Такого треку не знайдено',
+        link: `/spotify-playlist-add?playlistId=${playlistId}`,
+      },
+    })
+  }
+  playlist.tracks.push(trackToAdd)
   res.render('spotify-playlist', {
     style: 'spotify-playlist',
-
     data: {
       playlistId: playlist.id,
       tracks: playlist.tracks,
@@ -317,6 +336,45 @@ router.get('/spotify-track-add', function (req, res) {
     },
   })
 })
+
 // Підключаємо роутер до бек-енду
+
+router.get('/spotify-search', function (req, res) {
+  const value = ''
+
+  const list = Playlist.findListByValue(value)
+
+  res.render('spotify-search', {
+    style: 'spotify-search',
+
+    data: {
+      list: list.map(({ tracks, ...rest }) => ({
+        ...rest,
+        amount: tracks.length,
+      })),
+      value,
+    },
+  })
+})
+
+router.post('/spotify-search', function (req, res) {
+  const value = req.body.value || ''
+
+  const list = Playlist.findListByValue(value)
+
+  console.log(value)
+
+  res.render('spotify-search', {
+    style: 'spotify-search',
+
+    data: {
+      list: list.map(({ tracks, ...rest }) => ({
+        ...rest,
+        amount: tracks.length,
+      })),
+      value,
+    },
+  })
+})
 
 module.exports = router
